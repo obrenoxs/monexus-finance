@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: monexus-finance
+
+  profiles:
+    active: dev
