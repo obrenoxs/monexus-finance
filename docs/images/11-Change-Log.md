@@ -8,6 +8,10 @@ Este projeto segue o princípio de evolução contínua.
 
 # [Unreleased]
 
+## Changed
+
+- Migração da organização de pacotes de Package by Layer para Package by Feature, visando maior escalabilidade e coesão conforme o crescimento do roadmap do projeto.
+
 ## Added
 
 - Planejamento inicial do projeto.

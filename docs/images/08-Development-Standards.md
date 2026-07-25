@@ -57,17 +57,6 @@ Uma classe só entra em shared se for utilizada por duas ou mais funcionalidades
 
 ---
 
-## Registrar no `11-Change-Log.md`
-
-Na seção **`[Unreleased]`**, dentro de `## Changed` (crie a seção se ainda não existir):
-
-```markdown
-## Changed
-
-- Migração da organização de pacotes de Package by Layer para Package by Feature, visando maior escalabilidade e coesão conforme o crescimento do roadmap do projeto.
-
----
-
 # Convenções de Nome
 
 ## Classes
