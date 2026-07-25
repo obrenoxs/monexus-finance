@@ -90,33 +90,60 @@ O projeto seguirá os princípios:
 
 # Organização do Projeto
 
-O projeto seguirá a seguinte organização:
+O projeto seguirá o padrão **Package by Feature** (organização por funcionalidade/domínio de negócio), em vez de Package by Layer.
 
-```
-controller
+Cada funcionalidade principal do sistema possui seu próprio pacote, contendo internamente todas as camadas necessárias (Controller, Service, Repository, Entity, DTO, Mapper).
 
-service
+Pacotes compartilhados entre funcionalidades (configuração, segurança, tratamento de exceções e utilitários) ficam centralizados em um pacote `shared`.
 
-repository
+Estrutura geral:
 
-entity
+com.monexus.finance
+│
+├── user
+│ ├── controller
+│ ├── service
+│ ├── repository
+│ ├── entity
+│ ├── dto
+│ │ ├── request
+│ │ └── response
+│ └── mapper
+│
+├── wallet
+│ └── (mesma estrutura interna)
+│
+├── category
+│ └── (mesma estrutura interna)
+│
+├── transaction
+│ └── (mesma estrutura interna)
+│
+├── goal
+│ └── (mesma estrutura interna)
+│
+└── shared
+├── config
+├── security
+├── exception
+└── utils
 
-dto
+Cada funcionalidade é responsável apenas pelas suas próprias camadas internas, mantendo alta coesão.
 
-mapper
+O `shared` concentra apenas o que é, de fato, transversal a múltiplas funcionalidades — nunca regra de negócio de um domínio específico.
 
-config
+---
 
-security
+**Motivo da escolha (Package by Feature vs Package by Layer):**
 
-exception
+O padrão Package by Layer, embora mais didático para introdução ao Spring Boot, tende a dificultar a navegação e manutenção conforme o número de funcionalidades cresce (roadmap do projeto prevê múltiplos módulos: Carteira, Categorias, Transações, Metas, Investimentos, Parcelamentos, Multi Wallet, IA, entre outros).
 
-utils
+O Package by Feature favorece:
 
-docs
-```
-
-Cada pacote possuirá apenas uma responsabilidade.
+- alta coesão (tudo relacionado a uma funcionalidade fica junto);
+- baixo acoplamento entre domínios distintos;
+- navegação mais clara conforme o sistema cresce;
+- maior alinhamento com o princípio de Separation of Concerns em nível de domínio, não apenas técnico.
 
 ---
 

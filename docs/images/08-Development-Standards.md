@@ -38,29 +38,33 @@ O projeto seguirá:
 
 # Organização de Pacotes
 
-```
-config
+O projeto segue o padrão **Package by Feature**.
 
-controller
+Cada funcionalidade de negócio possui seu próprio pacote raiz, contendo as camadas necessárias internamente:
 
-dto
+<feature> ├── controller ├── service ├── repository ├── entity ├── dto │ ├── request │ └── response └── mapper ```
 
-entity
+shared
+├── config
+├── security
+├── exception
+└── utils
 
-exception
+Regras:
 
-mapper
+Nenhuma funcionalidade deve depender diretamente de camadas internas de outra funcionalidade (ex: wallet não deve importar classes de dentro de user.service, apenas o que for exposto via shared ou contrato público, quando necessário).
+Uma classe só entra em shared se for utilizada por duas ou mais funcionalidades. Caso contrário, permanece dentro do pacote da própria feature.
 
-repository
+---
 
-security
+## Registrar no `11-Change-Log.md`
 
-service
+Na seção **`[Unreleased]`**, dentro de `## Changed` (crie a seção se ainda não existir):
 
-utils
-```
+```markdown
+## Changed
 
-Cada pacote possui apenas uma responsabilidade.
+- Migração da organização de pacotes de Package by Layer para Package by Feature, visando maior escalabilidade e coesão conforme o crescimento do roadmap do projeto.
 
 ---
 
