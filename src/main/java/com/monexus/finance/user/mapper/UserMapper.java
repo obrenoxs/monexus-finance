@@ -14,7 +14,7 @@ public interface UserMapper {
     @Mapping(target = "profileImage", ignore = true)
     @Mapping(target = "emailVerified", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updateAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     User toEntity(RegisterRequest request);
 
     UserResponse toResponse(User user);
