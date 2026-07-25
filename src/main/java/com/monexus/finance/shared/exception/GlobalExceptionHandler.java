@@ -1,0 +1,67 @@
+package com.monexus.finance.shared.exception;
+
+import com.monexus.finance.user.exception.EmailAlreadyExistsException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+
+import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<Map<String, Object>> handleEmailAlreadyExists(
+            EmailAlreadyExistsException ex, WebRequest request) {
+        return buildResponse(HttpStatus.CONFLICT, ex.getMessage(), null, request);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidation(
+            MethodArgumentNotValidException ex, WebRequest request) {
+
+        List<Map<String, String>> errors = ex.getBindingResult().getFieldErrors().stream()
+                .map(this::toFieldErrorMap)
+                .collect(Collectors.toList());
+
+        return buildResponse(
+                HttpStatus.UNPROCESSABLE_ENTITY,
+                "Erro de validação nos dados enviados",
+                errors,
+                request
+        );
+    }
+
+    private Map<String, String> toFieldErrorMap(FieldError error) {
+        Map<String, String> fieldError = new LinkedHashMap<>();
+        fieldError.put("field", error.getField());
+        fieldError.put("message", error.getDefaultMessage());
+        return fieldError;
+    }
+
+    private ResponseEntity<Map<String, Object>> buildResponse(
+            HttpStatus status, String message, List<Map<String, String>> errors, WebRequest request) {
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", status.value());
+        body.put("error", status.getReasonPhrase());
+        body.put("message", message);
+
+        if (errors != null && !errors.isEmpty()) {
+            body.put("errors", errors);
+        }
+
+        body.put("path", request.getDescription(false).replace("uri=", ""));
+
+        return ResponseEntity.status(status).body(body);
+    }
+}

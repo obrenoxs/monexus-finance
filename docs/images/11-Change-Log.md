@@ -12,6 +12,8 @@ Este projeto segue o princípio de evolução contínua.
 
 - Migração da organização de pacotes de Package by Layer para Package by Feature, visando maior escalabilidade e coesão conforme o crescimento do roadmap do projeto.
 
+- Padrão de erro da API expandido para incluir lista detalhada de campos inválidos (`errors`) em respostas de validação (422).
+
 ## Added
 
 - Planejamento inicial do projeto.

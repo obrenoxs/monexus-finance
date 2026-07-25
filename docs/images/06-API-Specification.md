@@ -436,6 +436,26 @@ Exemplo de erro
 }
 ```
 
+Exemplo de erro de validação (múltiplos campos)
+
+Quando a requisição falha em múltiplas regras de validação simultaneamente, a resposta incluirá o campo adicional `errors`, contendo a lista de cada campo inválido e sua respectiva mensagem.
+
+```json
+{
+  "timestamp": "2026-07-24T21:15:00",
+  "status": 422,
+  "error": "Unprocessable Entity",
+  "message": "Erro de validação nos dados enviados",
+  "errors": [
+    { "field": "firstName", "message": "Nome é obrigatório" },
+    { "field": "email", "message": "E-mail inválido" }
+  ],
+  "path": "/api/v1/auth/register"
+}
+```
+
+O campo `errors` é opcional e aparece apenas quando há um ou mais erros de validação de campo. Erros de regra de negócio (ex: e-mail duplicado) continuam seguindo o formato simples, sem esse campo.
+
 ---
 
 # OpenAPI
