@@ -3,6 +3,9 @@ package com.monexus.finance.shared.exception;
 import com.monexus.finance.user.exception.EmailAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -38,6 +41,21 @@ public class GlobalExceptionHandler {
                 errors,
                 request
         );
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Map<String, Object>> handleBadCredentials(BadCredentialsException ex, WebRequest request) {
+        return buildResponse(HttpStatus.UNAUTHORIZED, "E-mail ou senha inválidos", null, request);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleUsernameNotFound(UsernameNotFoundException ex, WebRequest request) {
+        return buildResponse(HttpStatus.UNAUTHORIZED, "E-mail ou senha inválidos", null, request);
+    }
+
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<Map<String, Object>> handleDisabled(DisabledException ex, WebRequest request) {
+        return buildResponse(HttpStatus.FORBIDDEN, "Confirme seu e-mail antes de fazer login", null, request);
     }
 
     private Map<String, String> toFieldErrorMap(FieldError error) {
