@@ -1,6 +1,7 @@
 package com.monexus.finance.shared.exception;
 
 import com.monexus.finance.user.exception.EmailAlreadyExistsException;
+import com.monexus.finance.user.exception.InvalidConfirmationTokenException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -56,6 +57,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<Map<String, Object>> handleDisabled(DisabledException ex, WebRequest request) {
         return buildResponse(HttpStatus.FORBIDDEN, "Confirme seu e-mail antes de fazer login", null, request);
+    }
+
+    @ExceptionHandler(InvalidConfirmationTokenException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidConfirmationToken(InvalidConfirmationTokenException ex, WebRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), null, request);
     }
 
     private Map<String, String> toFieldErrorMap(FieldError error) {

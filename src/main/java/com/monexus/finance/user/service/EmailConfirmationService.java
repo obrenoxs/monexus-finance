@@ -1,6 +1,7 @@
 package com.monexus.finance.user.service;
 
 import com.monexus.finance.user.entity.User;
+import com.monexus.finance.user.exception.InvalidConfirmationTokenException;
 import com.monexus.finance.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -54,5 +55,21 @@ public class EmailConfirmationService {
         );
 
         mailSender.send(message);
+    }
+
+    @Transactional
+    public void confirmEmail(String token) {
+        User user = userRepository.findByConfirmationToken(token)
+                .orElseThrow(() -> new InvalidConfirmationTokenException("Token de confirmação inválido."));
+
+        if (LocalDateTime.now().isAfter(user.getConfirmationTokenExpiresAt())) {
+            throw new InvalidConfirmationTokenException("Este link de confirmação expirou. Solicite um novo.");
+        }
+
+        user.setEmailVerified(true);
+        user.setConfirmationToken(null);
+        user.setConfirmationTokenExpiresAt(null);
+
+        userRepository.save(user);
     }
 }

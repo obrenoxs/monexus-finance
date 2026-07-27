@@ -5,14 +5,14 @@ import com.monexus.finance.user.dto.request.RegisterRequest;
 import com.monexus.finance.user.dto.response.AuthResponse;
 import com.monexus.finance.user.dto.response.UserResponse;
 import com.monexus.finance.user.service.AuthService;
+import com.monexus.finance.user.service.EmailConfirmationService;
 import com.monexus.finance.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -20,10 +20,12 @@ public class AuthController {
 
     private final UserService userService;
     private final AuthService authService;
+    private final EmailConfirmationService emailConfirmationService;
 
-    public AuthController(UserService userService, AuthService authService) {
+    public AuthController(UserService userService, AuthService authService, EmailConfirmationService emailConfirmationService) {
         this.userService = userService;
         this.authService = authService;
+        this.emailConfirmationService = emailConfirmationService;
     }
 
     @PostMapping("/register")
@@ -37,4 +39,10 @@ public class AuthController {
         AuthResponse response = authService.login(request);
         return ResponseEntity.ok(response);
     }
-}
+
+    @GetMapping("/confirm-email")
+    public ResponseEntity<Map<String, String>> confirmEmail(@RequestParam("token") String token) {
+        emailConfirmationService.confirmEmail(token);
+        return ResponseEntity.ok(Map.of("message", "E-mail confirmado com sucesso!"));
+    }
+ }
