@@ -36,6 +36,12 @@ public class User {
     @Column(name = "email_verified", nullable = false)
     private boolean emailVerified;
 
+    @Column(name = "confirmation_token")
+    private String confirmationToken;
+
+    @Column(name = "confirmation_token_expires_at")
+    private LocalDateTime confirmationTokenExpiresAt;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
