@@ -3,6 +3,7 @@ package com.monexus.finance.user.controller;
 import com.monexus.finance.user.dto.request.LoginRequest;
 import com.monexus.finance.user.dto.request.RegisterRequest;
 import com.monexus.finance.user.dto.response.AuthResponse;
+import com.monexus.finance.user.dto.response.RegisterResponse;
 import com.monexus.finance.user.dto.response.UserResponse;
 import com.monexus.finance.user.service.AuthService;
 import com.monexus.finance.user.service.EmailConfirmationService;
@@ -29,8 +30,14 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterRequest request) {
-        UserResponse response = userService.register(request);
+    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
+        UserResponse userResponse = userService.register(request);
+
+        RegisterResponse response = new RegisterResponse(
+                userResponse,
+                "Cadastro realizado com sucesso! Verifique seu e-mail para confirmar sua conta."
+        );
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

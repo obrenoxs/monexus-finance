@@ -74,6 +74,21 @@ POST
 
 ---
 
+## Confirmação de E-mail
+
+GET
+
+Descrição
+
+Confirma o e-mail do usuário a partir do token enviado por e-mail.
+
+Nota: embora essa operação altere o estado do usuário (emailVerified),
+o verbo GET foi escolhido deliberadamente, pois o cliente desta chamada
+é um link clicado em um e-mail (sem possibilidade de disparar POST
+nativamente). Essa é uma exceção reconhecida e documentada à convenção
+REST padrão do restante da API.
+---
+
 ## Redefinição
 
 POST
