@@ -42,6 +42,12 @@ public class User {
     @Column(name = "confirmation_token_expires_at")
     private LocalDateTime confirmationTokenExpiresAt;
 
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
+
+    @Column(name = "reset_password_token_expires_at")
+    private LocalDateTime resetPasswordTokenExpiresAt;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
