@@ -1,12 +1,15 @@
 package com.monexus.finance.user.controller;
 
+import com.monexus.finance.user.dto.request.ForgotPasswordRequest;
 import com.monexus.finance.user.dto.request.LoginRequest;
 import com.monexus.finance.user.dto.request.RegisterRequest;
+import com.monexus.finance.user.dto.request.ResetPasswordRequest;
 import com.monexus.finance.user.dto.response.AuthResponse;
 import com.monexus.finance.user.dto.response.RegisterResponse;
 import com.monexus.finance.user.dto.response.UserResponse;
 import com.monexus.finance.user.service.AuthService;
 import com.monexus.finance.user.service.EmailConfirmationService;
+import com.monexus.finance.user.service.PasswordResetService;
 import com.monexus.finance.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -22,11 +25,16 @@ public class AuthController {
     private final UserService userService;
     private final AuthService authService;
     private final EmailConfirmationService emailConfirmationService;
+    private final PasswordResetService passwordResetService;
 
-    public AuthController(UserService userService, AuthService authService, EmailConfirmationService emailConfirmationService) {
+    public AuthController(UserService userService,
+                          AuthService authService,
+                          EmailConfirmationService emailConfirmationService,
+                          PasswordResetService passwordResetService) {
         this.userService = userService;
         this.authService = authService;
         this.emailConfirmationService = emailConfirmationService;
+        this.passwordResetService = passwordResetService;
     }
 
     @PostMapping("/register")
@@ -51,5 +59,17 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> confirmEmail(@RequestParam("token") String token) {
         emailConfirmationService.confirmEmail(token);
         return ResponseEntity.ok(Map.of("message", "E-mail confirmado com sucesso!"));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        passwordResetService.requestPasswordReset(request.email());
+        return ResponseEntity.ok(Map.of("message", "Se este e-mail estiver cadastrado, você receberá um link de redefinição em instantes."));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        passwordResetService.resetPassword(request.token(), request.newPassword());
+        return ResponseEntity.ok(Map.of("message", "Senha redefinida com sucesso!"));
     }
  }

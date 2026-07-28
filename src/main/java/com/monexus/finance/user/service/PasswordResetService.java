@@ -1,6 +1,7 @@
 package com.monexus.finance.user.service;
 
 import com.monexus.finance.user.entity.User;
+import com.monexus.finance.user.exception.InvalidResetPasswordTokenException;
 import com.monexus.finance.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;

@@ -2,6 +2,7 @@ package com.monexus.finance.shared.exception;
 
 import com.monexus.finance.user.exception.EmailAlreadyExistsException;
 import com.monexus.finance.user.exception.InvalidConfirmationTokenException;
+import com.monexus.finance.user.exception.InvalidResetPasswordTokenException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -61,6 +62,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidConfirmationTokenException.class)
     public ResponseEntity<Map<String, Object>> handleInvalidConfirmationToken(InvalidConfirmationTokenException ex, WebRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), null, request);
+    }
+
+    @ExceptionHandler(InvalidResetPasswordTokenException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidResetPasswordToken(InvalidResetPasswordTokenException ex, WebRequest request) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), null, request);
     }
 
