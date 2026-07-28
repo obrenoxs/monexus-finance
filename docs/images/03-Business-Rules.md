@@ -45,7 +45,17 @@ Todo novo usuário deverá confirmar seu e-mail antes de utilizar completamente 
 
 ## Recuperação de Senha
 
-O usuário poderá redefinir sua senha através do e-mail cadastrado.
+O usuário poderá redefinir sua senha através de um token enviado por e-mail, com validade de 24 horas e uso único.
+
+Por motivo de segurança, o endpoint de solicitação de recuperação sempre retornará a mesma resposta genérica, independentemente de o e-mail informado estar ou não cadastrado no sistema — evitando que a API seja usada para descobrir quais e-mails possuem conta na plataforma (enumeração de usuários).
+
+### Limitação conhecida (V1)
+
+Ao trocar a senha com sucesso através desse fluxo, tokens JWT emitidos anteriormente para o usuário **não são invalidados automaticamente** — eles continuam válidos até sua expiração natural (24h).
+
+Motivo: a autenticação do sistema é stateless (JWT sem estado no servidor), e invalidar tokens específicos antes da expiração exigiria um mecanismo de revogação (ex: blocklist de tokens, tipicamente com Redis), que não está no escopo de infraestrutura da V1.
+
+Essa limitação é aceita conscientemente por ora e está registrada como melhoria futura de segurança.
 
 ---
 
