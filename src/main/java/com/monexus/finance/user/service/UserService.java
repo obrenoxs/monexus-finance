@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UserService {
@@ -20,12 +21,14 @@ public class UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher eventPublisher;
+    private final ImageStorageService imageStorageService;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, ApplicationEventPublisher eventPublisher) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, ApplicationEventPublisher eventPublisher, ImageStorageService imageStorageService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.eventPublisher = eventPublisher;
+        this.imageStorageService = imageStorageService;
     }
 
     @Transactional
@@ -50,6 +53,16 @@ public class UserService {
         authenticatedUser.setFirstName(request.firstName());
         authenticatedUser.setLastName(request.lastName());
 
+        User updatedUser = userRepository.save(authenticatedUser);
+
+        return userMapper.toResponse(updatedUser);
+    }
+
+    @Transactional
+    public UserResponse updateProfileImage(User authenticatedUser, MultipartFile file) {
+        String imageUrl = imageStorageService.uploadImage(file);
+
+        authenticatedUser.setProfileImage(imageUrl);
         User updatedUser = userRepository.save(authenticatedUser);
 
         return userMapper.toResponse(updatedUser);

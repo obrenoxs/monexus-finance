@@ -1,8 +1,6 @@
 package com.monexus.finance.shared.exception;
 
-import com.monexus.finance.user.exception.EmailAlreadyExistsException;
-import com.monexus.finance.user.exception.InvalidConfirmationTokenException;
-import com.monexus.finance.user.exception.InvalidResetPasswordTokenException;
+import com.monexus.finance.user.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -68,6 +66,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidResetPasswordTokenException.class)
     public ResponseEntity<Map<String, Object>> handleInvalidResetPasswordToken(InvalidResetPasswordTokenException ex, WebRequest request) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), null, request);
+    }
+
+    @ExceptionHandler(InvalidFileException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidFile(InvalidFileException ex, WebRequest request) {
+        return buildResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), null, request);
+    }
+
+    @ExceptionHandler(ImageUploadException.class)
+    public ResponseEntity<Map<String, Object>> handleImageUpload(ImageUploadException ex, WebRequest request) {
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), null, request);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<Map<String, Object>> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException ex, WebRequest request) {
+        return buildResponse(HttpStatus.PAYLOAD_TOO_LARGE, "O tamanho do arquivo excede o limite máximo permitido de 8MB.", null, request);
     }
 
     private Map<String, String> toFieldErrorMap(FieldError error) {
