@@ -1,6 +1,7 @@
 package com.monexus.finance.user.service;
 
 import com.monexus.finance.user.dto.request.RegisterRequest;
+import com.monexus.finance.user.dto.request.UpdateProfileRequest;
 import com.monexus.finance.user.dto.response.UserResponse;
 import com.monexus.finance.user.entity.User;
 import com.monexus.finance.user.event.UserRegisteredEvent;
@@ -42,5 +43,19 @@ public class UserService {
         eventPublisher.publishEvent(new UserRegisteredEvent(savedUser));
 
         return userMapper.toResponse(savedUser);
+    }
+
+    @Transactional
+    public UserResponse updateProfile(User authenticatedUser, UpdateProfileRequest request) {
+        authenticatedUser.setFirstName(request.firstName());
+        authenticatedUser.setLastName(request.lastName());
+
+        User updatedUser = userRepository.save(authenticatedUser);
+
+        return userMapper.toResponse(updatedUser);
+    }
+
+    public UserResponse getUserResponse(User user) {
+        return userMapper.toResponse(user);
     }
 }
