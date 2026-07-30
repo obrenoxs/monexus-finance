@@ -1,6 +1,7 @@
 package com.monexus.finance.user.controller;
 
 import com.monexus.finance.user.dto.request.ChangeEmailRequest;
+import com.monexus.finance.user.dto.request.DeleteAccountRequest;
 import com.monexus.finance.user.dto.request.UpdateProfileRequest;
 import com.monexus.finance.user.dto.response.UserResponse;
 import com.monexus.finance.user.security.CustomUserDetails;
@@ -55,5 +56,11 @@ public class UserController {
     public ResponseEntity<Map<String, String>> confirmEmailChange(@RequestParam("token") String token) {
         emailChangeService.confirmEmailChange(token);
         return ResponseEntity.ok(Map.of("message", "E-mail alterado com sucesso!"));
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteAccount(@AuthenticationPrincipal CustomUserDetails userDetails, @Valid @RequestBody DeleteAccountRequest request) {
+        userService.deleteAccount(userDetails.getUser(), request.currentPassword());
+        return ResponseEntity.noContent().build();
     }
 }

@@ -10,6 +10,7 @@ import com.monexus.finance.user.exception.EmailAlreadyExistsException;
 import com.monexus.finance.user.mapper.UserMapper;
 import com.monexus.finance.user.repository.UserRepository;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,6 +68,16 @@ public class UserService {
         User updatedUser = userRepository.save(authenticatedUser);
 
         return userMapper.toResponse(updatedUser);
+    }
+
+    @Transactional
+    public void deleteAccount(User authenticatedUser, String currentPassword) {
+
+        if (!passwordEncoder.matches(currentPassword, authenticatedUser.getPassword())) {
+            throw new BadCredentialsException("Senha atual incorreta.");
+        }
+
+        userRepository.delete(authenticatedUser);
     }
 
     public UserResponse getUserResponse(User user) {
