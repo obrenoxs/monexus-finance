@@ -48,6 +48,15 @@ public class User {
     @Column(name = "reset_password_token_expires_at")
     private LocalDateTime resetPasswordTokenExpiresAt;
 
+    @Column(name = "pending_email", length = 150)
+    private String pendingEmail;
+
+    @Column(name = "email_change_token")
+    private String emailChangeToken;
+
+    @Column(name = "email_change_token_expires_at")
+    private LocalDateTime emailChangeTokenExpiresAt;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

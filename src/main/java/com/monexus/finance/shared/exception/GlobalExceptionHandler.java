@@ -83,6 +83,11 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.PAYLOAD_TOO_LARGE, "O tamanho do arquivo excede o limite máximo permitido de 8MB.", null, request);
     }
 
+    @ExceptionHandler(InvalidEmailChangeTokenException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidEmailChangeToken(InvalidEmailChangeTokenException ex, WebRequest request) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), null, request);
+    }
+
     private Map<String, String> toFieldErrorMap(FieldError error) {
         Map<String, String> fieldError = new LinkedHashMap<>();
         fieldError.put("field", error.getField());

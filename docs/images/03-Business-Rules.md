@@ -33,7 +33,11 @@ Caso o usuário não envie uma foto, o sistema utilizará um avatar padrão.
 
 O e-mail deve ser único.
 
-Não será permitido alterar o e-mail após o cadastro.
+O usuário poderá alterar seu e-mail cadastrado, mediante confirmação
+do novo endereço através de link enviado por e-mail.
+
+O e-mail atual permanece válido para login até que o novo seja
+confirmado com sucesso — a troca só é efetivada após a confirmação.
 
 ---
 
