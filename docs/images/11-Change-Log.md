@@ -8,21 +8,36 @@ Este projeto segue o princípio de evolução contínua.
 
 # [Unreleased]
 
-## Changed
-
-- Migração da organização de pacotes de Package by Layer para Package by Feature, visando maior escalabilidade e coesão conforme o crescimento do roadmap do projeto.
-
-- Padrão de erro da API expandido para incluir lista detalhada de campos inválidos (`errors`) em respostas de validação (422).
-
 ## Added
 
-- Planejamento inicial do projeto.
-- Arquitetura definida.
-- Modelagem de domínio.
-- Design System.
-- Estrutura REST da API.
-- Roadmap.
-- Estratégia de Deployment.
+### Autenticação e Segurança
+
+- Cadastro de usuário com validação de dados e hash de senha via BCrypt.
+- Login com autenticação stateless via JWT (Spring Security).
+- Confirmação de e-mail obrigatória via token de uso único (UUID), com expiração de 24h.
+- Recuperação de senha via token enviado por e-mail (expiração de 1h), com resposta genérica para prevenir enumeração de usuários.
+- Perfil do usuário: consulta (`GET /users/me`) e atualização de dados (`PUT /users/me`).
+- Upload de foto de perfil via integração com Cloudinary, com validação de tipo e tamanho de arquivo (máx. 8MB).
+- Alteração de e-mail com confirmação obrigatória do novo endereço e reautenticação por senha.
+- Exclusão de conta com reautenticação por senha.
+- Envio de e-mails transacionais via Mailtrap (ambiente de desenvolvimento), com SimpleMailMessage.
+- Tratamento centralizado de exceções via `@RestControllerAdvice`, incluindo validação de campos com retorno detalhado por campo.
+
+## Changed
+
+- Migração da organização de pacotes de Package by Layer para Package by Feature.
+- Padrão de erro da API expandido para incluir lista detalhada de campos inválidos (`errors`) em respostas de validação (422).
+
+## Security
+
+- Senhas armazenadas exclusivamente como hash BCrypt, nunca em texto plano.
+- Autenticação JWT stateless, sem guarda de sessão no servidor.
+- Respostas de "esqueci minha senha" e login padronizadas para não revelar existência de e-mails cadastrados.
+- Operações sensíveis (troca de e-mail, exclusão de conta) exigem reautenticação por senha, mesmo com sessão já autenticada.
+
+## Known Limitations
+
+- Tokens JWT emitidos antes de uma troca de senha não são invalidados automaticamente (permanecem válidos até expiração natural). Mecanismo de revogação (blocklist) planejado para versão futura.
 
 ---
 

@@ -72,11 +72,18 @@ Toda movimentação financeira pertence à Wallet.
 
 ## Atributos
 
+## Atributos
+
 - id
-- currentBalance
 - currency
 - createdAt
 - updatedAt
+
+O saldo da carteira não é um atributo persistido. Ele é calculado
+dinamicamente a partir da soma das Transactions vinculadas (Receitas
+menos Despesas), conforme definido em 05-Database-Design.md. Essa
+decisão evita divergência entre o saldo armazenado e o histórico real
+de movimentações.
 
 ## Relacionamentos
 
