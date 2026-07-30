@@ -1,9 +1,9 @@
-package com.monexus.finance.user.service;
+package com.monexus.finance.shared.storage;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.monexus.finance.user.exception.ImageUploadException;
-import com.monexus.finance.user.exception.InvalidFileException;
+import com.monexus.finance.shared.exception.ImageUploadException;
+import com.monexus.finance.shared.exception.InvalidFileException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

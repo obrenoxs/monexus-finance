@@ -70,7 +70,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidFileException.class)
     public ResponseEntity<Map<String, Object>> handleInvalidFile(InvalidFileException ex, WebRequest request) {
-        return buildResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), null, request);
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), null, request);
     }
 
     @ExceptionHandler(ImageUploadException.class)
@@ -78,8 +78,8 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), null, request);
     }
 
-    @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ResponseEntity<Map<String, Object>> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException ex, WebRequest request) {
+    @ExceptionHandler(org.springframework.web.multipart.MaxUploadSizeExceededException.class)
+    public ResponseEntity<Map<String, Object>> handleMaxUploadSizeExceeded(org.springframework.web.multipart.MaxUploadSizeExceededException ex, WebRequest request) {
         return buildResponse(HttpStatus.PAYLOAD_TOO_LARGE, "O tamanho do arquivo excede o limite máximo permitido de 8MB.", null, request);
     }
 

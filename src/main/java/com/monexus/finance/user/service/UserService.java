@@ -1,5 +1,6 @@
 package com.monexus.finance.user.service;
 
+import com.monexus.finance.shared.storage.ImageStorageService;
 import com.monexus.finance.user.dto.request.RegisterRequest;
 import com.monexus.finance.user.dto.request.UpdateProfileRequest;
 import com.monexus.finance.user.dto.response.UserResponse;

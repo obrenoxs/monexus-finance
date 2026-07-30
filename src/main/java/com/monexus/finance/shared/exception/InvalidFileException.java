@@ -1,4 +1,4 @@
-package com.monexus.finance.user.exception;
+package com.monexus.finance.shared.exception;
 
 public class InvalidFileException extends RuntimeException {
 
