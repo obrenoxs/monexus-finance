@@ -166,6 +166,14 @@ Supermercado
 
 São categorias diferentes.
 
+## Personalização Visual (Futuro)
+
+Está prevista, para uma versão futura, a possibilidade de o usuário
+associar cor e ícone a cada categoria, escolhidos a partir de um
+conjunto pré-definido alinhado ao Design System (07-Frontend-Design-System.md).
+Não faz parte do escopo da V1: exige decisão prévia de paleta/ícones
+permitidos, o que depende do desenvolvimento do Frontend.
+
 ---
 
 ## Exclusão

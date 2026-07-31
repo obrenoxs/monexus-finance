@@ -33,12 +33,6 @@ public class Category {
     @Column(nullable = false, length = 20)
     private CategoryType type;
 
-    @Column(nullable = false, length = 20)
-    private String color;
-
-    @Column(nullable = false, length = 50)
-    private String icon;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "wallet_id", nullable = false)
     private Wallet wallet;

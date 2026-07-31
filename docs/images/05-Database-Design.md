@@ -117,6 +117,7 @@ id BIGINT
 | type | VARCHAR(20) | NOT NULL |
 | wallet_id | BIGINT | FK |
 | created_at | DATETIME | NOT NULL |
+| updated_at | DATETIME | NOT NULL |
 
 ---
 
@@ -270,7 +271,7 @@ type
 categories
 
 ```
-name
+wallet_id
 ```
 
 ---
@@ -292,6 +293,13 @@ Não será permitido:
 - Transaction sem Category.
 - Goal sem Wallet.
 - Category sem Wallet.
+
+
+  Uma categoria é única por combinação de carteira, nome e tipo
+  (constraint uk_categories_wallet_name_type) — evita duplicidade de
+  categorias como "Supermercado" (Despesa) cadastrada duas vezes na
+  mesma carteira. Categorias de Receita e Despesa com o mesmo nome
+  são permitidas e tratadas como entidades distintas.
 
 ---
 
