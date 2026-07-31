@@ -1,6 +1,7 @@
 package com.monexus.finance.shared.exception;
 
 import com.monexus.finance.user.exception.*;
+import com.monexus.finance.wallet.exception.WalletNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -86,6 +87,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidEmailChangeTokenException.class)
     public ResponseEntity<Map<String, Object>> handleInvalidEmailChangeToken(InvalidEmailChangeTokenException ex, WebRequest request) {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), null, request);
+    }
+
+    @ExceptionHandler(WalletNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleWalletNotFound(WalletNotFoundException ex, WebRequest request) {
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), null, request);
     }
 
     private Map<String, String> toFieldErrorMap(FieldError error) {

@@ -49,7 +49,7 @@ Todo novo usuário deverá confirmar seu e-mail antes de utilizar completamente 
 
 ## Recuperação de Senha
 
-O usuário poderá redefinir sua senha através de um token enviado por e-mail, com validade de 24 horas e uso único.
+O usuário poderá redefinir sua senha através de um token enviado por e-mail, com validade de 1 hora e uso único.
 
 Por motivo de segurança, o endpoint de solicitação de recuperação sempre retornará a mesma resposta genérica, independentemente de o e-mail informado estar ou não cadastrado no sistema — evitando que a API seja usada para descobrir quais e-mails possuem conta na plataforma (enumeração de usuários).
 
@@ -86,6 +86,21 @@ Cada usuário poderá possuir apenas uma carteira na versão 1.
 A arquitetura será preparada para suportar múltiplas carteiras futuramente.
 
 Uma carteira nunca poderá existir sem um usuário.
+
+## Criação da Carteira
+
+A carteira é criada automaticamente no momento do cadastro do usuário,
+de forma síncrona e na mesma transação do registro — garantindo que
+nunca exista um usuário sem carteira.
+
+Não existe endpoint de criação manual de carteira na V1.
+
+### Moeda (V1)
+
+Na versão 1, toda carteira é criada com moeda fixa em BRL (Real).
+Não há seleção de moeda pelo usuário nesta versão. A coluna `currency`
+já está modelada como texto livre (não enum fixo) para permitir
+seleção pelo usuário em versão futura, sem exigir alteração estrutural.
 
 ---
 
