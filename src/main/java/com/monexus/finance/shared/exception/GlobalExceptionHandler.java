@@ -1,5 +1,7 @@
 package com.monexus.finance.shared.exception;
 
+import com.monexus.finance.category.exception.CategoryAlreadyExistsException;
+import com.monexus.finance.category.exception.CategoryNotFoundException;
 import com.monexus.finance.user.exception.*;
 import com.monexus.finance.wallet.exception.WalletNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -91,6 +93,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(WalletNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleWalletNotFound(WalletNotFoundException ex, WebRequest request) {
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), null, request);
+    }
+
+    @ExceptionHandler(CategoryAlreadyExistsException.class)
+    public ResponseEntity<Map<String, Object>> handleCategoryAlreadyExists(CategoryAlreadyExistsException ex, WebRequest request) {
+        return buildResponse(HttpStatus.CONFLICT, ex.getMessage(), null, request);
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleCategoryNotFound(CategoryNotFoundException ex, WebRequest request) {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), null, request);
     }
 

@@ -182,6 +182,19 @@ Uma categoria somente poderá ser excluída caso não possua nenhuma movimentaç
 
 Caso existam receitas ou despesas utilizando essa categoria, sua exclusão deverá ser impedida.
 
+### Limitação conhecida (V1)
+
+Como o módulo de Transações ainda não existe, a validação "categoria
+não pode ser excluída se possuir movimentações vinculadas" ainda não
+está implementada tecnicamente — não há, hoje, nenhuma fonte de dados
+para essa checagem. Na prática isso não viola a regra, já que é
+fisicamente impossível existir uma transação vinculada a uma categoria
+neste momento do projeto.
+
+Esta validação deverá ser implementada obrigatoriamente junto com o
+módulo de Transações (verificação via TransactionRepository antes da
+exclusão), antes de a V1 ser considerada completa.
+
 ---
 
 # Saldo
