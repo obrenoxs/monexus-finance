@@ -148,6 +148,22 @@ Despesas poderão ser:
 
 ---
 
+# Consistência entre Transação e Categoria
+
+O tipo de uma transação deve obrigatoriamente coincidir com o tipo da
+categoria vinculada a ela.
+
+Uma transação do tipo Receita (INCOME) somente poderá utilizar
+categorias do tipo Receita.
+
+Uma transação do tipo Despesa (EXPENSE) somente poderá utilizar
+categorias do tipo Despesa.
+
+Caso o tipo da transação e o tipo da categoria informada não
+coincidam, a operação deverá ser rejeitada.
+
+---
+
 # Categorias
 
 Cada usuário poderá criar suas próprias categorias.
