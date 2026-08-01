@@ -5,6 +5,7 @@ import com.monexus.finance.user.dto.request.RegisterRequest;
 import com.monexus.finance.user.dto.request.UpdateProfileRequest;
 import com.monexus.finance.user.dto.response.UserResponse;
 import com.monexus.finance.user.entity.User;
+import com.monexus.finance.user.event.UserDeletedEvent;
 import com.monexus.finance.user.event.UserRegisteredEvent;
 import com.monexus.finance.user.exception.EmailAlreadyExistsException;
 import com.monexus.finance.user.mapper.UserMapper;
@@ -77,6 +78,7 @@ public class UserService {
             throw new BadCredentialsException("Senha atual incorreta.");
         }
 
+        eventPublisher.publishEvent(new UserDeletedEvent(authenticatedUser));
         userRepository.delete(authenticatedUser);
     }
 

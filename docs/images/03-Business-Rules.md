@@ -67,6 +67,15 @@ Essa limitação é aceita conscientemente por ora e está registrada como melho
 
 O próprio usuário poderá excluir sua conta.
 
+A exclusão é implementada através de uma cadeia de eventos síncronos
+(mesma transação): ao excluir o usuário, a carteira vinculada é
+removida; ao remover a carteira, transações e categorias vinculadas
+são removidas antes dela, nessa ordem, para respeitar a integridade
+referencial (metas serão incluídas quando o módulo Goal existir).
+
+Toda a operação é atômica: qualquer falha em qualquer etapa da cadeia
+reverte a exclusão por completo.
+
 Ao excluir a conta:
 
 - carteira será removida;

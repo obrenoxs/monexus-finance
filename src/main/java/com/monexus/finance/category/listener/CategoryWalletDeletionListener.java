@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class WalletDeletionListener {
+public class CategoryWalletDeletionListener {
 
     private final CategoryRepository categoryRepository;
 
-    public WalletDeletionListener(CategoryRepository categoryRepository) {
+    public CategoryWalletDeletionListener(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
 
