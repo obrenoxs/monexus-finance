@@ -4,9 +4,11 @@ import com.monexus.finance.category.dto.request.CategoryRequest;
 import com.monexus.finance.category.dto.response.CategoryResponse;
 import com.monexus.finance.category.entity.Category;
 import com.monexus.finance.category.exception.CategoryAlreadyExistsException;
+import com.monexus.finance.category.exception.CategoryInUseException;
 import com.monexus.finance.category.exception.CategoryNotFoundException;
 import com.monexus.finance.category.mapper.CategoryMapper;
 import com.monexus.finance.category.repository.CategoryRepository;
+import com.monexus.finance.category.validation.CategoryUsageValidator;
 import com.monexus.finance.user.entity.User;
 import com.monexus.finance.wallet.entity.Wallet;
 import com.monexus.finance.wallet.service.WalletService;
@@ -21,11 +23,13 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
     private final WalletService walletService;
+    private final List<CategoryUsageValidator> usageValidators;
 
-    public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper, WalletService walletService) {
+    public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper, WalletService walletService, List<CategoryUsageValidator> usageValidators) {
         this.categoryRepository = categoryRepository;
         this.categoryMapper = categoryMapper;
         this.walletService = walletService;
+        this.usageValidators = usageValidators;
     }
 
     @Transactional
@@ -76,14 +80,24 @@ public class CategoryService {
     @Transactional
     public void deleteCategory(User authenticatedUser, Long categoryId) {
         Category category = findOwnedCategory(authenticatedUser, categoryId);
-        // TODO: bloquear exclusão caso existam transações vinculadas à categoria,
-        // assim que o módulo de Transações existir (03-Business-Rules.md).
+
+        boolean inUse = usageValidators.stream()
+                        .anyMatch(validator -> validator.isInUse(category.getId()));
+
+        if (inUse) {
+            throw new CategoryInUseException(category.getId());
+        }
+
         categoryRepository.delete(category);
+    }
+
+    public Category getCategoryForWallet(Wallet wallet, Long categoryId) {
+        return categoryRepository.findByIdAndWalletId(categoryId, wallet.getId())
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
     }
 
     private Category findOwnedCategory(User authenticatedUser, Long categoryId) {
         Wallet wallet = walletService.getWalletByUser(authenticatedUser);
-        return categoryRepository.findByIdAndWalletId(categoryId, wallet.getId())
-                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+        return getCategoryForWallet(wallet, categoryId);
     }
 }

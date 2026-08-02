@@ -1,7 +1,10 @@
 package com.monexus.finance.shared.exception;
 
 import com.monexus.finance.category.exception.CategoryAlreadyExistsException;
+import com.monexus.finance.category.exception.CategoryInUseException;
 import com.monexus.finance.category.exception.CategoryNotFoundException;
+import com.monexus.finance.transaction.exception.TransactionCategoryMismatchException;
+import com.monexus.finance.transaction.exception.TransactionNotFoundException;
 import com.monexus.finance.user.exception.*;
 import com.monexus.finance.wallet.exception.WalletNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -104,6 +107,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CategoryNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleCategoryNotFound(CategoryNotFoundException ex, WebRequest request) {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), null, request);
+    }
+
+    @ExceptionHandler(CategoryInUseException.class)
+    public ResponseEntity<Map<String, Object>> handleCategoryInUse(CategoryInUseException ex, WebRequest request) {
+        return buildResponse(HttpStatus.CONFLICT, ex.getMessage(), null, request);
+    }
+
+    @ExceptionHandler(TransactionNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleTransactionNotFound(TransactionNotFoundException ex, WebRequest request) {
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), null, request);
+    }
+
+    @ExceptionHandler(TransactionCategoryMismatchException.class)
+    public ResponseEntity<Map<String, Object>> handleTransactionCategoryMismatch(TransactionCategoryMismatchException ex, WebRequest request) {
+        return buildResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), null, request);
     }
 
     private Map<String, String> toFieldErrorMap(FieldError error) {
