@@ -18,11 +18,11 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     @Query("""
         SELECT FUNCTION('DATE_FORMAT', t.date, '%Y-%m') as yearMonth,
-               t.type as type,
-               SUM(t.amount) as total
+             t.type as type,
+             SUM(t.amount) as total
         FROM Transaction t
         WHERE t.wallet.id = :walletId
-          AND t.date >= :startDate
+            AND (:startDate IS NULL OR t.date >= :startDate)
         GROUP BY FUNCTION('DATE_FORMAT', t.date, '%Y-%m'), t.type
         ORDER BY yearMonth ASC
         """)

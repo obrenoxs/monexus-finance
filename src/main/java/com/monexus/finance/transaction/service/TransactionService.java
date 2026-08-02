@@ -4,12 +4,14 @@ import com.monexus.finance.category.entity.Category;
 import com.monexus.finance.category.enums.CategoryType;
 import com.monexus.finance.category.service.CategoryService;
 import com.monexus.finance.transaction.dto.request.TransactionRequest;
+import com.monexus.finance.transaction.dto.response.MonthlySummary;
 import com.monexus.finance.transaction.dto.response.TransactionResponse;
 import com.monexus.finance.transaction.entity.Transaction;
 import com.monexus.finance.transaction.enums.TransactionType;
 import com.monexus.finance.transaction.exception.TransactionCategoryMismatchException;
 import com.monexus.finance.transaction.exception.TransactionNotFoundException;
 import com.monexus.finance.transaction.mapper.TransactionMapper;
+import com.monexus.finance.transaction.repository.MonthlyAggregateProjection;
 import com.monexus.finance.transaction.repository.TransactionRepository;
 import com.monexus.finance.user.entity.User;
 import com.monexus.finance.wallet.entity.Wallet;
@@ -17,7 +19,10 @@ import com.monexus.finance.wallet.service.WalletService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.*;
 
 @Service
 public class TransactionService {
@@ -93,5 +98,38 @@ public class TransactionService {
         if (!transactionType.name().equals(categoryType.name())) {
             throw new TransactionCategoryMismatchException(transactionType, categoryType);
         }
+    }
+
+    public List<MonthlySummary> getMonthlyHistory(Wallet wallet, LocalDate startDate) {
+        List<MonthlyAggregateProjection> aggregates = transactionRepository.findMonthlyAggregates(wallet.getId(), startDate);
+
+        Map<YearMonth, BigDecimal> incomeByMonth = new TreeMap<>();
+        Map<YearMonth, BigDecimal> expenseByMonth = new TreeMap<>();
+
+        for (MonthlyAggregateProjection aggregate : aggregates) {
+            YearMonth yearMonth = YearMonth.parse(aggregate.getYearMonth());
+            if (aggregate.getType() == TransactionType.INCOME) {
+                incomeByMonth.put(yearMonth, aggregate.getTotal());
+            } else {
+                expenseByMonth.put(yearMonth, aggregate.getTotal());
+            }
+        }
+
+        Set<YearMonth> allMonths = new TreeSet<>();
+        allMonths.addAll(incomeByMonth.keySet());
+        allMonths.addAll(expenseByMonth.keySet());
+
+        return allMonths.stream()
+                .map(month -> {
+                    BigDecimal income = incomeByMonth.getOrDefault(month, BigDecimal.ZERO);
+                    BigDecimal expense = expenseByMonth.getOrDefault(month, BigDecimal.ZERO);
+                    return new MonthlySummary(month, income, expense, income.subtract(expense));
+                }).toList();
+    }
+
+    public BigDecimal getCurrentBalance(Wallet wallet) {
+        return getMonthlyHistory(wallet, null).stream()
+                .map(MonthlySummary::balance)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
