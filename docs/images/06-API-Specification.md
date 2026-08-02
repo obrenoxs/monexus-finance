@@ -325,14 +325,15 @@ GET
 /dashboard
 ```
 
+Valores aceitos: `CURRENT_MONTH` (padrão), `LAST_3_MONTHS`, `LAST_12_MONTHS`, `ALL_TIME`.
+
 Retornará
 
-- saldo atual
-- receitas do mês
-- despesas do mês
-- saldo do mês
-- comparação mensal
-- gráficos
+- saldo atual (currentBalance) — sempre referente a toda a conta, independe do período
+- receitas do mês atual (monthlyIncome)
+- despesas do mês atual (monthlyExpense)
+- saldo do mês atual (monthlyBalance)
+- histórico mensal (history) — array de receitas/despesas/saldo agrupados por mês, conforme o período solicitado
 
 ---
 
