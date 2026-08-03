@@ -256,6 +256,22 @@ email
 transactions
 
 ```
+category_id
+```
+
+---
+
+transactions
+
+```
+wallet_id
+```
+
+---
+
+transactions
+
+```
 date
 ```
 
@@ -280,10 +296,19 @@ wallet_id
 goals
 
 ```
+wallet_id
+```
+
+---
+
+goals
+
+```
 target_date
 ```
 
 ---
+
 
 # Integridade
 
