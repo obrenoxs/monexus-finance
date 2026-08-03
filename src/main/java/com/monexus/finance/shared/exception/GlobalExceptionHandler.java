@@ -3,6 +3,7 @@ package com.monexus.finance.shared.exception;
 import com.monexus.finance.category.exception.CategoryAlreadyExistsException;
 import com.monexus.finance.category.exception.CategoryInUseException;
 import com.monexus.finance.category.exception.CategoryNotFoundException;
+import com.monexus.finance.goal.exception.GoalNotFoundException;
 import com.monexus.finance.transaction.exception.TransactionCategoryMismatchException;
 import com.monexus.finance.transaction.exception.TransactionNotFoundException;
 import com.monexus.finance.user.exception.*;
@@ -122,6 +123,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TransactionCategoryMismatchException.class)
     public ResponseEntity<Map<String, Object>> handleTransactionCategoryMismatch(TransactionCategoryMismatchException ex, WebRequest request) {
         return buildResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), null, request);
+    }
+
+    @ExceptionHandler(GoalNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleGoalNotFound(GoalNotFoundException ex, WebRequest request) {
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), null, request);
     }
 
     private Map<String, String> toFieldErrorMap(FieldError error) {
