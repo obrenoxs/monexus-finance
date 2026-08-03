@@ -145,7 +145,8 @@ id BIGINT
 | id | BIGINT | PK |
 | title | VARCHAR(150) | NOT NULL |
 | target_amount | DECIMAL(19,2) | NOT NULL |
-| target_date | DATE | NOT NULL |
+| current_amount | DECIMAL(19,2) | NOT NULL DEFAULT 0 |
+| target_date | DATE | NULL |
 | wallet_id | BIGINT | FK |
 | created_at | DATETIME | NOT NULL |
 | updated_at | DATETIME | NOT NULL |

@@ -190,7 +190,8 @@ Representa uma meta financeira.
 - id
 - title
 - targetAmount
-- targetDate
+- currentAmount
+- targetDate (opcional)
 - createdAt
 - updatedAt
 

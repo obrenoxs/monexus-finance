@@ -305,6 +305,16 @@ PUT
 
 ---
 
+## Atualizar progresso da meta
+
+PATCH
+
+```
+/goals/{id}/progress
+```
+
+---
+
 ## Excluir meta
 
 DELETE

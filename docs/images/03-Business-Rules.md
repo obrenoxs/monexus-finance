@@ -255,10 +255,13 @@ O Dashboard deverá apresentar:
 
 Cada meta pertence à carteira do usuário.
 
-Uma meta deverá possuir:
+Uma meta deverá possuir obrigatoriamente:
 
 - nome;
-- valor alvo;
+- valor alvo.
+
+Campo opcional:
+
 - data prevista.
 
 O sistema calculará automaticamente:
@@ -266,6 +269,30 @@ O sistema calculará automaticamente:
 - progresso;
 - percentual concluído;
 - valor restante.
+
+## Progresso da Meta
+
+Cada meta possui seu próprio valor acumulado (currentAmount), independente
+do saldo geral da carteira. O usuário alimenta esse valor manualmente,
+indicando o quanto já guardou especificamente para aquela meta.
+
+Isso evita que múltiplas metas simultâneas "disputem" o mesmo saldo da
+carteira — cada meta evolui de forma isolada e própria.
+
+O progresso é calculado como:
+
+Percentual concluído = (currentAmount / targetAmount) × 100
+
+Valor restante = targetAmount − currentAmount
+
+currentAmount nunca poderá ser negativo, nem superior a um valor que
+não faça sentido — não há bloqueio de valor máximo, mas o sistema
+não impede o usuário de registrar um valor além do target (a meta
+simplesmente aparece como 100% ou mais concluída).
+
+A atualização do valor acumulado (currentAmount) é feita através de
+endpoint próprio (PATCH /goals/{id}/progress), independente da edição
+dos demais dados da meta (PUT /goals/{id}).
 
 ---
 
