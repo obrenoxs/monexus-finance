@@ -1,9 +1,6 @@
 package com.monexus.finance.goal.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,5 +15,6 @@ public record GoalRequest(
         @Positive(message = "Valor alvo deve ser maior que zero")
         BigDecimal targetAmount,
 
+        @FutureOrPresent
         LocalDate targetDate
 ) {}
