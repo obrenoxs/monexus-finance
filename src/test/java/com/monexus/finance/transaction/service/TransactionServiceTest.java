@@ -4,12 +4,14 @@ import com.monexus.finance.category.entity.Category;
 import com.monexus.finance.category.enums.CategoryType;
 import com.monexus.finance.category.service.CategoryService;
 import com.monexus.finance.transaction.dto.request.TransactionRequest;
+import com.monexus.finance.transaction.dto.response.MonthlySummary;
 import com.monexus.finance.transaction.dto.response.TransactionResponse;
 import com.monexus.finance.transaction.entity.Transaction;
 import com.monexus.finance.transaction.enums.TransactionType;
 import com.monexus.finance.transaction.exception.TransactionCategoryMismatchException;
 import com.monexus.finance.transaction.exception.TransactionNotFoundException;
 import com.monexus.finance.transaction.mapper.TransactionMapper;
+import com.monexus.finance.transaction.repository.MonthlyAggregateProjection;
 import com.monexus.finance.transaction.repository.TransactionRepository;
 import com.monexus.finance.user.entity.User;
 import com.monexus.finance.wallet.entity.Wallet;
@@ -22,6 +24,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -157,5 +161,78 @@ class TransactionServiceTest {
         transactionService.deleteTransaction(user, 20L);
 
         verify(transactionRepository).delete(transaction);
+    }
+
+    private record FakeAggregate(String yearMonth, TransactionType type, BigDecimal total) implements MonthlyAggregateProjection {
+        @Override
+        public String getYearMonth() {
+            return yearMonth;
+        }
+
+        @Override
+        public TransactionType getType() {
+            return type;
+        }
+
+        @Override
+        public BigDecimal getTotal() {
+            return total;
+        }
+    }
+
+    @Test
+    void shouldGroupIncomeAndExpenseByMonth() {
+        when(transactionRepository.findMonthlyAggregates(wallet.getId(), null)).thenReturn(List.of(
+                new FakeAggregate("2026-06", TransactionType.INCOME, BigDecimal.valueOf(3000)),
+                new FakeAggregate("2026-06", TransactionType.EXPENSE, BigDecimal.valueOf(1200)),
+                new FakeAggregate("2026-07", TransactionType.INCOME, BigDecimal.valueOf(3200)),
+                new FakeAggregate("2026-07", TransactionType.EXPENSE, BigDecimal.valueOf(1400))
+        ));
+
+        List<MonthlySummary> history = transactionService.getMonthlyHistory(wallet, null);
+
+        assertThat(history).hasSize(2);
+
+        MonthlySummary june = history.getFirst();
+        assertThat(june.yearMonth()).isEqualTo(YearMonth.of(2026, 6));
+        assertThat(june.income()).isEqualByComparingTo("3000");
+        assertThat(june.expense()).isEqualByComparingTo("1200");
+        assertThat(june.balance()).isEqualByComparingTo("1800");
+
+        MonthlySummary july = history.get(1);
+        assertThat(july.yearMonth()).isEqualTo(YearMonth.of(2026, 7));
+        assertThat(july.balance()).isEqualByComparingTo("1800");
+    }
+
+    @Test
+    void shouldFillZeroWhenMonthHasOnlyIncomeOrOnlyExpense() {
+        when(transactionRepository.findMonthlyAggregates(wallet.getId(), null)).thenReturn(List.of(
+                new FakeAggregate("2026-06", TransactionType.INCOME, BigDecimal.valueOf(2000)),
+                new FakeAggregate("2026-07", TransactionType.EXPENSE, BigDecimal.valueOf(500))
+        ));
+
+        List<MonthlySummary> history = transactionService.getMonthlyHistory(wallet, null);
+
+        MonthlySummary june = history.getFirst();
+        assertThat(june.income()).isEqualByComparingTo("2000");
+        assertThat(june.expense()).isEqualByComparingTo("0");
+
+        MonthlySummary july = history.get(1);
+        assertThat(july.income()).isEqualByComparingTo("0");
+        assertThat(july.expense()).isEqualByComparingTo("500");
+    }
+
+    @Test
+    void shouldSumBalanceAcrossAllMonthsForCurrentBalance() {
+        when(transactionRepository.findMonthlyAggregates(wallet.getId(), null)).thenReturn(List.of(
+                new FakeAggregate("2026-06", TransactionType.INCOME, BigDecimal.valueOf(3000)),
+                new FakeAggregate("2026-06", TransactionType.EXPENSE, BigDecimal.valueOf(1200)),
+                new FakeAggregate("2026-07", TransactionType.INCOME, BigDecimal.valueOf(3200)),
+                new FakeAggregate("2026-07", TransactionType.EXPENSE, BigDecimal.valueOf(1400))
+        ));
+
+        BigDecimal balance = transactionService.getCurrentBalance(wallet);
+
+        assertThat(balance).isEqualByComparingTo("3600");
     }
 }
