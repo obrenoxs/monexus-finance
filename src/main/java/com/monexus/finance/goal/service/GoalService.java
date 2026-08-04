@@ -29,7 +29,7 @@ public class GoalService {
     }
 
     @Transactional
-    public GoalResponse createdGoal(User authenticatedUser, GoalRequest request) {
+    public GoalResponse createGoal(User authenticatedUser, GoalRequest request) {
         Wallet wallet = walletService.getWalletByUser(authenticatedUser);
 
         Goal goal = goalMapper.toEntity(request);

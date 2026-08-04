@@ -25,7 +25,7 @@ public class GoalController {
 
     @PostMapping
     public ResponseEntity<GoalResponse> createGoal(@AuthenticationPrincipal CustomUserDetails userDetails, @Valid @RequestBody GoalRequest request) {
-        GoalResponse response = goalService.createdGoal(userDetails.getUser(), request);
+        GoalResponse response = goalService.createGoal(userDetails.getUser(), request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
