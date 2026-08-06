@@ -116,4 +116,4 @@ A aplicação estará disponível em `http://localhost:5173`.
 **Breno Oliveira**
 Estudante de Engenharia de Software e Análise e Desenvolvimento de Sistemas.
 
-[LinkedIn](linkedin.com/in/breno-oliveira-souza) · [GitHub](https://github.com/obrenoxs)
+[LinkedIn](https://www.linkedin.com/in/breno-oliveira-souza/) · [GitHub](https://github.com/obrenoxs)
