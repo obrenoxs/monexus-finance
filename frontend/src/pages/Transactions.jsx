@@ -7,6 +7,7 @@ import {
 import { getCategories } from "../services/categoryService";
 import Input from "../components/Input";
 import ConfirmDialog from "../components/ConfirmDialog";
+import CurrencyInput from "../components/CurrencyInput";
 
 function formatCurrency(value) {
   return new Intl.NumberFormat("pt-BR", {
@@ -22,7 +23,7 @@ function Transactions() {
   const [error, setError] = useState("");
 
   const [description, setDescription] = useState("");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState(0);
   const [date, setDate] = useState("");
   const [type, setType] = useState("EXPENSE");
   const [categoryId, setCategoryId] = useState("");
@@ -62,13 +63,13 @@ function Transactions() {
     try {
       await createTransaction({
         description,
-        amount: parseFloat(amount),
+        amount,
         date,
         type,
         categoryId: Number(categoryId),
       });
       setDescription("");
-      setAmount("");
+      setAmount(0);
       setDate("");
       setCategoryId("");
       loadData();
@@ -102,12 +103,9 @@ function Transactions() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
-          <Input
-            label="Valor"
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
+          
+          <CurrencyInput label="Valor" value={amount} onChange={setAmount} />
+    
           <Input
             label="Data"
             type="date"
