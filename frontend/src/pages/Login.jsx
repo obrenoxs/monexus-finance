@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { login } from "../services/authService";
+import { login as loginRequest } from "../services/authService";
+import { useAuth } from "../context/AuthContext";
 import Input from "../components/Input";
 
 function Login() {
@@ -8,19 +9,20 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
 
     try {
-      const data = await login(email, password);
-      localStorage.setItem("token", data.token);
+      const data = await loginRequest(email, password);
+      login(data.token);
       navigate("/dashboard");
     } catch (err) {
       setError("E-mail ou senha inválidos.");
     }
-  }
+}
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
