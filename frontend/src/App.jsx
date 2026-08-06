@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Categories from "./pages/Categories";
+import Transactions from "./pages/Transactions";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           >
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/categories" element={<Categories />} />
+            <Route path="/transactions" element={<Transactions />} />
           </Route>
         </Routes>
       </BrowserRouter>
