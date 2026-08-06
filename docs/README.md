@@ -11,7 +11,7 @@
 
 O Monexus Finance é uma plataforma completa de gestão financeira pessoal — carteira, categorias, transações, metas e um dashboard com indicadores em tempo real. É, ao mesmo tempo, um produto funcional e um estudo aprofundado de arquitetura de software: cada decisão técnica (camadas, eventos, segurança, testes) foi documentada antes de ser implementada, e o histórico de commits reflete esse processo de construção incremental, não um código entregue de uma vez só.
 
-Toda a documentação de domínio, arquitetura e regras de negócio está disponível na pasta [`docs/`](./docs).
+Toda a documentação de domínio, arquitetura e regras de negócio está disponível na pasta [`docs/`].
 
 ## Funcionalidades
 
