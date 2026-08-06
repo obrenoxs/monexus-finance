@@ -4,6 +4,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <div>Dashboard (em construção)</div>
+                <Dashboard />
               </ProtectedRoute>
             }
           />
