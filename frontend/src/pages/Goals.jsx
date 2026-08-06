@@ -162,20 +162,26 @@ function Goals() {
 
       {error && <p className="text-sm text-expense mb-4">{error}</p>}
 
-      {loading ? (
-        <p className="text-text-secondary">Carregando...</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {goals.map((goal) => (
-            <GoalCard
-              key={goal.id}
-              goal={goal}
-              onProgressUpdate={handleProgressUpdate}
-              onDeleteRequest={setGoalToDelete}
-            />
-          ))}
-        </div>
-      )}
+{loading ? (
+  <p className="text-text-secondary">Carregando...</p>
+) : goals.length === 0 ? (
+  <div className="bg-surface rounded-2xl shadow-md p-8 text-center">
+    <p className="text-text-secondary">
+      Nenhuma meta criada ainda. Que tal começar uma agora?
+    </p>
+  </div>
+) : (
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {goals.map((goal) => (
+      <GoalCard
+        key={goal.id}
+        goal={goal}
+        onProgressUpdate={handleProgressUpdate}
+        onDeleteRequest={setGoalToDelete}
+      />
+    ))}
+  </div>
+)}
 
       <ConfirmDialog
         isOpen={!!goalToDelete}

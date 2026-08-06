@@ -155,42 +155,48 @@ function Transactions() {
 
       {error && <p className="text-sm text-expense mb-4">{error}</p>}
 
-      {loading ? (
-        <p className="text-text-secondary">Carregando...</p>
-      ) : (
-        <div className="flex flex-col gap-3">
-          {transactions.map((transaction) => (
-            <div
-              key={transaction.id}
-              className="bg-surface rounded-2xl shadow-md p-4 flex items-center justify-between"
-            >
-              <div>
-                <p className="text-text-primary font-medium">{transaction.description}</p>
-                <p className="text-sm text-text-secondary">
-                  {transaction.categoryName} • {transaction.date}
-                </p>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <p
-                  className={`font-mono ${
-                    transaction.type === "INCOME" ? "text-success" : "text-expense"
-                  }`}
-                >
-                  {transaction.type === "INCOME" ? "+" : "-"}
-                  {formatCurrency(transaction.amount)}
-                </p>
-                <button
-                  onClick={() => setTransactionToDelete(transaction)}
-                  className="text-text-secondary hover:text-expense transition"
-                >
-                  Excluir
-                </button>
-              </div>
-            </div>
-          ))}
+{loading ? (
+  <p className="text-text-secondary">Carregando...</p>
+) : transactions.length === 0 ? (
+  <div className="bg-surface rounded-2xl shadow-md p-8 text-center">
+    <p className="text-text-secondary">
+      Nenhuma transação registrada ainda. Adicione a primeira acima!
+    </p>
+  </div>
+) : (
+  <div className="flex flex-col gap-3">
+    {transactions.map((transaction) => (
+      <div
+        key={transaction.id}
+        className="bg-surface rounded-2xl shadow-md p-4 flex items-center justify-between"
+      >
+        <div>
+          <p className="text-text-primary font-medium">{transaction.description}</p>
+          <p className="text-sm text-text-secondary">
+            {transaction.categoryName} • {transaction.date}
+          </p>
         </div>
-      )}
+
+        <div className="flex items-center gap-4">
+          <p
+            className={`font-mono ${
+              transaction.type === "INCOME" ? "text-success" : "text-expense"
+            }`}
+          >
+            {transaction.type === "INCOME" ? "+" : "-"}
+            {formatCurrency(transaction.amount)}
+          </p>
+          <button
+            onClick={() => setTransactionToDelete(transaction)}
+            className="text-text-secondary hover:text-expense transition"
+          >
+            Excluir
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
 
       <ConfirmDialog
         isOpen={!!transactionToDelete}

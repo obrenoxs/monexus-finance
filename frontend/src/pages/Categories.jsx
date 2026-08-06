@@ -39,20 +39,20 @@ function Categories() {
     }
   }
 
-function requestDelete(category) {
-  setCategoryToDelete(category);
-}
-
-async function confirmDelete() {
-  try {
-    await deleteCategory(categoryToDelete.id);
-    setCategoryToDelete(null);
-    loadCategories();
-  } catch (err) {
-    setError("Não foi possível excluir. Verifique se há transações vinculadas.");
-    setCategoryToDelete(null);
+  function requestDelete(category) {
+    setCategoryToDelete(category);
   }
-}
+
+  async function confirmDelete() {
+    try {
+      await deleteCategory(categoryToDelete.id);
+      setCategoryToDelete(null);
+      loadCategories();
+    } catch (err) {
+      setError("Não foi possível excluir. Verifique se há transações vinculadas.");
+      setCategoryToDelete(null);
+    }
+  }
 
   return (
     <div className="p-6">
@@ -90,6 +90,12 @@ async function confirmDelete() {
 
       {loading ? (
         <p className="text-text-secondary">Carregando...</p>
+      ) : categories.length === 0 ? (
+        <div className="bg-surface rounded-2xl shadow-md p-8 text-center">
+          <p className="text-text-secondary">
+            Você ainda não tem categorias. Crie a primeira acima!
+          </p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {categories.map((category) => (
@@ -110,23 +116,24 @@ async function confirmDelete() {
                 </span>
               </div>
 
-                <button
-                    onClick={() => requestDelete(category)}
-                    className="text-text-secondary hover:text-expense transition"
-                    >
-                    Excluir
-                </button>
+              <button
+                onClick={() => requestDelete(category)}
+                className="text-text-secondary hover:text-expense transition"
+              >
+                Excluir
+              </button>
             </div>
           ))}
         </div>
       )}
+
       <ConfirmDialog
-                isOpen={!!categoryToDelete}
-                title="Excluir categoria"
-                message={`Tem certeza que deseja excluir "${categoryToDelete?.name}"? Essa ação não pode ser desfeita.`}
-                onConfirm={confirmDelete}
-                onCancel={() => setCategoryToDelete(null)}
-            />
+        isOpen={!!categoryToDelete}
+        title="Excluir categoria"
+        message={`Tem certeza que deseja excluir "${categoryToDelete?.name}"? Essa ação não pode ser desfeita.`}
+        onConfirm={confirmDelete}
+        onCancel={() => setCategoryToDelete(null)}
+      />
     </div>
   );
 }

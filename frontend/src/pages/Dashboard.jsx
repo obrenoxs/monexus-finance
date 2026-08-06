@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
 import { getDashboard } from "../services/dashboardService";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 function formatCurrency(value) {
   return new Intl.NumberFormat("pt-BR", {
@@ -16,7 +25,7 @@ function Dashboard() {
   useEffect(() => {
     async function loadDashboard() {
       try {
-        const result = await getDashboard();
+        const result = await getDashboard("LAST_12_MONTHS");
         setData(result);
       } catch (err) {
         setError("Não foi possível carregar o dashboard.");
@@ -50,7 +59,7 @@ function Dashboard() {
         Dashboard
       </h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-surface rounded-2xl shadow-md p-6">
           <p className="text-sm text-text-secondary mb-1">Saldo Atual</p>
           <p className="text-xl font-mono text-primary">
@@ -78,6 +87,41 @@ function Dashboard() {
             {formatCurrency(data.monthlyBalance)}
           </p>
         </div>
+      </div>
+
+      <div className="bg-surface rounded-2xl shadow-md p-6 mt-6">
+        <h2 className="text-lg font-sans text-text-primary mb-4">
+          Evolução Mensal
+        </h2>
+
+        {data.history.length === 0 ? (
+          <p className="text-text-secondary text-sm">
+            Sem dados suficientes para exibir o gráfico ainda.
+          </p>
+        ) : (
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={data.history}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
+              <XAxis dataKey="yearMonth" tick={{ fontSize: 12 }} />
+              <YAxis tick={{ fontSize: 12 }} />
+              <Tooltip formatter={(value) => formatCurrency(value)} />
+              <Line
+                type="monotone"
+                dataKey="income"
+                stroke="#10B981"
+                strokeWidth={2}
+                name="Receitas"
+              />
+              <Line
+                type="monotone"
+                dataKey="expense"
+                stroke="#F43F5E"
+                strokeWidth={2}
+                name="Despesas"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
       </div>
     </div>
   );
