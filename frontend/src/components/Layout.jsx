@@ -1,11 +1,14 @@
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
+import ConfirmDialog from "./ConfirmDialog";
 
 function Layout() {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
-  function handleLogout() {
+  function confirmLogout() {
     logout();
     navigate("/login");
   }
@@ -45,16 +48,23 @@ function Layout() {
         </nav>
 
         <button
-          onClick={handleLogout}
-          className="text-sm text-text-secondary hover:text-expense text-left"
+            onClick={() => setShowLogoutConfirm(true)}
+            className="text-sm text-text-secondary hover:text-expense text-left"
         >
-          Sair
+            Sair
         </button>
       </aside>
 
       <main className="flex-1">
         <Outlet />
       </main>
+      <ConfirmDialog
+        isOpen={showLogoutConfirm}
+        title="Sair da conta"
+        message="Tem certeza que deseja sair?"
+        onConfirm={confirmLogout}
+        onCancel={() => setShowLogoutConfirm(false)}
+      />
     </div>
   );
 }
