@@ -30,6 +30,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
       DB_HOST: mysql
+      DB_NAME: monexus_finance
       DB_USERNAME: root
       DB_PASSWORD: ${DB_PASSWORD:-root}
       MAIL_HOST: ${MAIL_HOST}
