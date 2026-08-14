@@ -36,7 +36,7 @@ spring:
 
 app:
   mail:
-    from: no-reply@monexusfinance.com
+    from: ${MAIL_FROM:breno.joaosalvadorperez200@gmail.com}
   frontend:
     url: ${FRONTEND_URL:http://localhost:8080}
   cors:
