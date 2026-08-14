@@ -1,11 +1,10 @@
 package com.monexus.finance.user.service;
 
+import com.monexus.finance.shared.mail.BrevoEmailService;
 import com.monexus.finance.user.entity.User;
 import com.monexus.finance.user.exception.InvalidResetPasswordTokenException;
 import com.monexus.finance.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,20 +19,17 @@ public class PasswordResetService {
     private static final long TOKEN_EXPIRATION_HOURS = 1;
 
     private final UserRepository userRepository;
-    private final JavaMailSender mailSender;
+    private final BrevoEmailService brevoEmailService;
     private final PasswordEncoder passwordEncoder;
-    private final String mailFrom;
     private final String frontendUrl;
 
     public PasswordResetService(UserRepository userRepository,
-                                JavaMailSender mailSender,
+                                BrevoEmailService brevoEmailService,
                                 PasswordEncoder passwordEncoder,
-                                @Value("${app.mail.from}") String mailFrom,
                                 @Value("${app.frontend.url}") String frontendUrl) {
         this.userRepository = userRepository;
-        this.mailSender = mailSender;
+        this.brevoEmailService = brevoEmailService;
         this.passwordEncoder = passwordEncoder;
-        this.mailFrom = mailFrom;
         this.frontendUrl = frontendUrl;
     }
 
@@ -75,17 +71,11 @@ public class PasswordResetService {
     private void sendResetPasswordEmail(User user, String token) {
         String resetLink = frontendUrl + "/reset-password?token=" + token;
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(mailFrom);
-        message.setTo(user.getEmail());
-        message.setSubject("Redefinição de senha - Monexus Finance");
-        message.setText(
-                "Olá, " + user.getFirstName() + "!\n\n" +
+        String body = "Olá, " + user.getFirstName() + "!\n\n" +
                 "Você solicitou a redefinição da sua senha. Clique no link abaixo:\n" +
                 resetLink + "\n\n" +
-                "Este link expira em 1 hora. Se você não solicitou isso, ignore este e-mail."
-        );
+                "Este link expira em 1 hora. Se você não solicitou isso, ignore este e-mail.";
 
-        mailSender.send(message);
+        brevoEmailService.send(user.getEmail(), "Redefinição de senha - Monexus Finance", body);
     }
 }
