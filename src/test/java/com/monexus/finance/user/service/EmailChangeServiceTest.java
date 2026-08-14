@@ -1,5 +1,6 @@
 package com.monexus.finance.user.service;
 
+import com.monexus.finance.shared.mail.BrevoEmailService;
 import com.monexus.finance.user.entity.User;
 import com.monexus.finance.user.exception.EmailAlreadyExistsException;
 import com.monexus.finance.user.exception.InvalidEmailChangeTokenException;
@@ -7,11 +8,8 @@ import com.monexus.finance.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -20,6 +18,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,14 +32,14 @@ class EmailChangeServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @Mock
-    private JavaMailSender mailSender;
+    private BrevoEmailService brevoEmailService;
 
     private EmailChangeService emailChangeService;
 
     @BeforeEach
     void setUp() {
         emailChangeService = new EmailChangeService(
-                userRepository, passwordEncoder, mailSender, "no-reply@monexusfinance.com", "http://localhost:8080");
+                userRepository, passwordEncoder, brevoEmailService, "http://localhost:8080");
     }
 
     @Test
@@ -56,9 +56,7 @@ class EmailChangeServiceTest {
         assertThat(user.getEmailChangeToken()).isNotBlank();
         assertThat(user.getEmailChangeTokenExpiresAt()).isAfter(LocalDateTime.now().plusMinutes(50));
 
-        ArgumentCaptor<SimpleMailMessage> messageCaptor = ArgumentCaptor.forClass(SimpleMailMessage.class);
-        verify(mailSender).send(messageCaptor.capture());
-        assertThat(messageCaptor.getValue().getTo()).containsExactly("new@example.com");
+        verify(brevoEmailService).send(eq("new@example.com"), anyString(), anyString());
     }
 
     @Test
@@ -71,7 +69,7 @@ class EmailChangeServiceTest {
                 .isInstanceOf(BadCredentialsException.class);
 
         verify(userRepository, never()).save(any());
-        verify(mailSender, never()).send(any(SimpleMailMessage.class));
+        verify(brevoEmailService, never()).send(anyString(), anyString(), anyString());
     }
 
     @Test

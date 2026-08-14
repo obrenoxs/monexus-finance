@@ -1,16 +1,14 @@
 package com.monexus.finance.user.service;
 
+import com.monexus.finance.shared.mail.BrevoEmailService;
 import com.monexus.finance.user.entity.User;
 import com.monexus.finance.user.exception.InvalidResetPasswordTokenException;
 import com.monexus.finance.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
@@ -18,6 +16,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,7 +27,7 @@ class PasswordResetServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private JavaMailSender mailSender;
+    private BrevoEmailService brevoEmailService;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -37,7 +37,7 @@ class PasswordResetServiceTest {
     @BeforeEach
     void setUp() {
         passwordResetService = new PasswordResetService(
-                userRepository, mailSender, passwordEncoder, "no-reply@monexusfinance.com", "http://localhost:8080");
+                userRepository, brevoEmailService, passwordEncoder, "http://localhost:8080");
     }
 
     @Test
@@ -52,9 +52,7 @@ class PasswordResetServiceTest {
         assertThat(user.getResetPasswordToken()).isNotBlank();
         assertThat(user.getResetPasswordTokenExpiresAt()).isAfter(LocalDateTime.now().plusMinutes(50));
 
-        ArgumentCaptor<SimpleMailMessage> messageCaptor = ArgumentCaptor.forClass(SimpleMailMessage.class);
-        verify(mailSender).send(messageCaptor.capture());
-        assertThat(messageCaptor.getValue().getTo()).containsExactly("breno@example.com");
+        verify(brevoEmailService).send(eq("breno@example.com"), anyString(), anyString());
     }
 
     @Test
@@ -64,7 +62,7 @@ class PasswordResetServiceTest {
         passwordResetService.requestPasswordReset("naoexiste@example.com");
 
         verify(userRepository, never()).save(any());
-        verify(mailSender, never()).send(any(SimpleMailMessage.class));
+        verify(brevoEmailService, never()).send(anyString(), anyString(), anyString());
     }
 
     @Test

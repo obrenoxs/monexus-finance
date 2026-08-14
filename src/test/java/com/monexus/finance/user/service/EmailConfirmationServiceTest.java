@@ -1,22 +1,22 @@
 package com.monexus.finance.user.service;
 
+import com.monexus.finance.shared.mail.BrevoEmailService;
 import com.monexus.finance.user.entity.User;
 import com.monexus.finance.user.exception.InvalidConfirmationTokenException;
 import com.monexus.finance.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,14 +26,14 @@ class EmailConfirmationServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private JavaMailSender mailSender;
+    private BrevoEmailService brevoEmailService;
 
     private EmailConfirmationService emailConfirmationService;
 
     @BeforeEach
     void setUp() {
         emailConfirmationService = new EmailConfirmationService(
-                userRepository, mailSender, "no-reply@monexusfinance.com", "http://localhost:8080");
+                userRepository, brevoEmailService, "http://localhost:8080");
     }
 
     @Test
@@ -48,12 +48,7 @@ class EmailConfirmationServiceTest {
         assertThat(user.getConfirmationToken()).isNotBlank();
         assertThat(user.getConfirmationTokenExpiresAt()).isAfter(LocalDateTime.now().plusHours(23));
 
-        ArgumentCaptor<SimpleMailMessage> messageCaptor = ArgumentCaptor.forClass(SimpleMailMessage.class);
-        verify(mailSender).send(messageCaptor.capture());
-
-        SimpleMailMessage sentMessage = messageCaptor.getValue();
-        assertThat(sentMessage.getTo()).containsExactly("breno@example.com");
-        assertThat(sentMessage.getFrom()).isEqualTo("no-reply@monexusfinance.com");
+        verify(brevoEmailService).send(eq("breno@example.com"), anyString(), anyString());
     }
 
     @Test
