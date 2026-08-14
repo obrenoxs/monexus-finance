@@ -18,14 +18,14 @@ public class EmailConfirmationService {
 
     private final UserRepository userRepository;
     private final BrevoEmailService brevoEmailService;
-    private final String frontendUrl;
+    private final String backendUrl;
 
     public EmailConfirmationService(UserRepository userRepository,
                                     BrevoEmailService brevoEmailService,
-                                    @Value("${app.frontend.url}") String frontendUrl) {
+                                    @Value("${app.backend.url}") String backendUrl) {
         this.userRepository = userRepository;
         this.brevoEmailService = brevoEmailService;
-        this.frontendUrl = frontendUrl;
+        this.backendUrl = backendUrl;
     }
 
     @Transactional
@@ -40,7 +40,7 @@ public class EmailConfirmationService {
 
         userRepository.save(managedUser);
 
-        String confirmationLink = frontendUrl + "/api/v1/auth/confirm-email?token=" + token;
+        String confirmationLink = backendUrl + "/api/v1/auth/confirm-email?token=" + token;
 
         String body = "Olá, " + managedUser.getFirstName() + "!\n\n" +
                 "Confirme seu e-mail clicando no link abaixo:\n" +

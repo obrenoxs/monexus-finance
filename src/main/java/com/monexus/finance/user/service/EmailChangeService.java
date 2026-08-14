@@ -22,16 +22,16 @@ public class EmailChangeService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final BrevoEmailService brevoEmailService;
-    private final String frontendUrl;
+    private final String backendUrl;
 
     public EmailChangeService(UserRepository userRepository,
                               PasswordEncoder passwordEncoder,
                               BrevoEmailService brevoEmailService,
-                              @Value("${app.frontend.url}") String frontendUrl) {
+                              @Value("${app.backend.url}") String backendUrl) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.brevoEmailService = brevoEmailService;
-        this.frontendUrl = frontendUrl;
+        this.backendUrl = backendUrl;
     }
 
     @Transactional
@@ -53,7 +53,7 @@ public class EmailChangeService {
 
         userRepository.save(authenticatedUser);
 
-        String confirmationLink = frontendUrl + "/api/v1/users/me/confirm-email-change?token=" + token;
+        String confirmationLink = backendUrl + "/api/v1/users/me/confirm-email-change?token=" + token;
 
         String body = "Olá, " + authenticatedUser.getFirstName() + "!\n\n" +
                 "Confirme seu novo e-mail clicando no link abaixo:\n" +

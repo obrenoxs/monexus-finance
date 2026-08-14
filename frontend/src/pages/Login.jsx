@@ -20,7 +20,11 @@ function Login() {
       login(data.token);
       navigate("/dashboard");
     } catch (err) {
-      setError("E-mail ou senha inválidos.");
+      if (err.response?.status === 403) {
+        setError("Confirme seu e-mail antes de fazer login. Verifique sua caixa de entrada.");
+      } else {
+        setError("E-mail ou senha inválidos.");
+      }
     }
 }
 
