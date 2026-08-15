@@ -2,16 +2,18 @@
 
 > Plataforma de gestão financeira pessoal, construída com foco em arquitetura de software profissional — não apenas em "fazer funcionar".
 
-![Status](https://img.shields.io/badge/status-V1%20conclu%C3%ADda-brightgreen)
+![Status](https://img.shields.io/badge/status-V1%20em%20produ%C3%A7%C3%A3o-brightgreen)
 ![Java](https://img.shields.io/badge/Java-25-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0-brightgreen)
 ![React](https://img.shields.io/badge/React-19-blue)
+
+**🔗 Aplicação em produção:** [monexus-finance.vercel.app](https://monexus-finance.vercel.app)
 
 ## Sobre o projeto
 
 O Monexus Finance é uma plataforma completa de gestão financeira pessoal — carteira, categorias, transações, metas e um dashboard com indicadores em tempo real. É, ao mesmo tempo, um produto funcional e um estudo aprofundado de arquitetura de software: cada decisão técnica (camadas, eventos, segurança, testes) foi documentada antes de ser implementada, e o histórico de commits reflete esse processo de construção incremental, não um código entregue de uma vez só.
 
-Toda a documentação de domínio, arquitetura e regras de negócio está disponível na pasta [`docs/`].
+Toda a documentação de domínio, arquitetura e regras de negócio está disponível na pasta [`docs/`](./docs).
 
 ## Funcionalidades
 
@@ -44,6 +46,11 @@ Toda a documentação de domínio, arquitetura e regras de negócio está dispon
 - Tailwind CSS
 - Axios, Recharts
 
+**Infraestrutura de Produção**
+- Backend hospedado no [Railway](https://railway.app) (containerizado via Docker)
+- Frontend hospedado na [Vercel](https://vercel.com)
+- E-mail transacional via [Brevo](https://www.brevo.com) (API HTTP)
+
 ## Testes
 
 O projeto conta com testes unitários (Mockito) cobrindo regras de negócio de todos os módulos, e testes de integração com **Testcontainers**, validando queries reais contra um banco MySQL.
@@ -55,7 +62,7 @@ mvn verify    # testes unitários + integração
 
 A cada push na branch `main`, o GitHub Actions executa esse pipeline automaticamente.
 
-## Como executar o projeto
+## Como executar o projeto localmente
 
 ### Pré-requisitos
 - Java 25
@@ -107,13 +114,12 @@ A aplicação estará disponível em `http://localhost:5173`.
 - [x] Dashboard com gráficos
 - [x] Testes automatizados e CI/CD
 - [x] Frontend funcional (React + Tailwind)
-- [ ] Deploy em ambiente público
+- [x] Deploy em ambiente público (Railway + Vercel)
 - [ ] Refinamento visual e animações
 - [ ] Novas funcionalidades (v1.1+)
 
 ## Autor
 
 **Breno Oliveira**
-Estudante de Engenharia de Software e Análise e Desenvolvimento de Sistemas.
 
 [LinkedIn](https://www.linkedin.com/in/breno-oliveira-souza/) · [GitHub](https://github.com/obrenoxs)
