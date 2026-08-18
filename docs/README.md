@@ -17,7 +17,7 @@ Toda a documentação de domínio, arquitetura e regras de negócio está dispon
 
 ## Funcionalidades
 
-- **Autenticação completa**: cadastro, login com JWT, confirmação de e-mail, recuperação de senha, upload de foto de perfil
+- **Autenticação completa**: cadastro, login com JWT, confirmação de e-mail.
 - **Carteira, Categorias e Transações**: CRUD completo, com validação de consistência entre tipos
 - **Metas financeiras**: acompanhamento de progresso com barra visual
 - **Dashboard**: indicadores em tempo real e gráfico de evolução mensal
